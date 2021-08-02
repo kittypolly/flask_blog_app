@@ -1,0 +1,94 @@
+<!-- 반복되는 코드를 집어넣는건 프로그래머 입장에서 굉장히 비효율적이다. -->
+<!-- 그래서 여기에 한 번에 제어가 가능한 코드를 집어넣겠다. -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+    <script src="https://kit.fontawesome.com/7c15a324ee.js" crossorigin="anonymous"></script>
+
+    <style>
+      .fa-twitter{font-size: 20px;}
+      .nav-item { color: white!important }
+      i{font-size:16px;}
+    </style>
+
+    {% if title %}
+        <title>kwitter - {{ title }}  </title>
+    {% else %}
+        <title>kwitter </title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top bg-primary">
+          <div class="container">
+            <a class="navbar-brand mr-4" href="/"><i class="fab fa-twitter"></i></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggle">
+              <div class="navbar-nav mr-auto">
+                <a class="nav-item nav-link" href="{{url_for('home')}}"><i class="fas fa-home"></i> 홈</a>
+                <a class="nav-item nav-link" href="{{url_for('search')}}"><i class="fas fa-search"></i> 탐색하기</a>
+                <a class="nav-item nav-link" href=#><i class="fas fa-bell"></i> 알림</a>
+                <a class="nav-item nav-link" href=#><i class="fas fa-envelope"></i> 쪽지</a>
+                <a class="nav-item nav-link" href=#><i class="fas fa-bookmark"></i> 북마크</a>
+                <a class="nav-item nav-link" href=#><i class="fas fa-list"></i> 리스트</a>
+                <a class="nav-item nav-link" href=#><i class="fas fa-ellipsis-h"></i> 더보기</a>
+              </div>
+              <!-- Navbar Right Side -->
+              <div class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" href="{{url_for('new_post')}}">글쓰기</a>
+                  <a class="nav-item nav-link" href="{{url_for('account')}}">내 계정</a>
+                  <a class="nav-item nav-link" href="{{url_for('logout')}}">로그아웃</a>
+                {% else %}
+                  <a class="nav-item nav-link" href="{{url_for('login')}}">로그인</a>
+                  <a class="nav-item nav-link" href="{{url_for('register')}}">회원가입</a>
+                {% endif %}
+  
+              </div>
+            </div>
+          </div>
+       </nav>
+    </header>
+    
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">
+        <!-- with는 오류가 나더라도 자동으로 닫는 역할을 하는 파이썬 문법이다. -->
+        <!-- flaskblog에서 flash message가 오면 여기로 받는 구조다. -->
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+             {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>    
+             {% endfor %}
+            {% endif %}
+          {% endwith %}
+          {% block content %}{% endblock %}
+        </div>
+        
+      </div>
+    </main>
+
+
+      <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>
